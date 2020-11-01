@@ -31,7 +31,7 @@ const Register = () => {
   return (
     <>
       <CssBaseline />
-      <Box mt={25}>
+      <Box mt={15}>
         <Container maxWidth='sm'>
           <Card className={classes.root} elevation={5}>
             <CardContent>

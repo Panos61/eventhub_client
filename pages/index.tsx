@@ -56,16 +56,9 @@ export default function Index() {
         <div className={classes.container}>
           <GridContainer>
             <GridItem>
-              <h1 style={{ color: 'white', fontSize: '8vh' }}>
-                20.18
-                <br /> <h4 style={{ fontSize: '2vh' }}> Καλησπέρα Panos61 </h4>
-              </h1>
-
+              <Time />
               <h4>
-                Every landing page needs a small description after the big bold
-                title, that{"'"}s why we added this text here. Add here all the
-                information that can make you or your product create the first
-                impression.
+                Δημιουργήστε ή αναζητήστε κάθε νέο event στην περιοχή σας!
               </h4>
               <br />
               <Button href='https://www.youtube.com/watch?v=dQw4w9WgXcQ&ref=creativetim'>
