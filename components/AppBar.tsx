@@ -66,21 +66,13 @@ const App: React.FC = () => {
             <MenuIcon />
           </IconButton> */}
           <Typography variant='h6' className={classes.title}>
-            eventhub_
+            <Link href='/'>
+              <a style={{ textDecoration: 'none', color: '#ec407a' }}>
+                eventhub_
+              </a>
+            </Link>
           </Typography>
 
-          {/* <Button
-            style={{
-              fontWeight: 'bold',
-              position: 'absolute',
-              left: '60%',
-            }}
-            variant='outlined'
-          >
-            <Link href='/'>
-              <a style={{ textDecoration: 'none', color: '#e8e8e8' }}>+event</a>
-            </Link>
-          </Button> */}
           <Button
             style={{
               color: '#ec407a',

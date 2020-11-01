@@ -41,14 +41,13 @@ interface Values {
   email: string;
   username: string;
   password: string;
-  confirmPass: string;
 }
 
 interface Props {
   onSubmit: (values: Values) => void;
 }
 
-const Register: React.FC<Props> = ({ onSubmit }) => {
+const Login: React.FC<Props> = ({ onSubmit }) => {
   const classes = useStyles();
 
   //const register;
@@ -77,23 +76,14 @@ const Register: React.FC<Props> = ({ onSubmit }) => {
           <Card className={classes.root} elevation={5}>
             <CardContent>
               <h2 style={{ fontFamily: 'sans-serif', color: 'black' }}>
-                Εγγραφή στο <span style={{ color: ' #FF6F1D' }}>eventhub_</span>
+                Σύνδεση στο <span style={{ color: ' #FF6F1D' }}>eventhub_</span>
               </h2>
-              {/* <Formik 
-              initialValues={{email: '', username: '', password: '', confirmPass: ''}}
-              onSubmit={async (values, {setErrors}) => {
-                const response = await register({
-                  variables: {options: values},
-                  update: (cachem)
-                })
-              }} */}
 
               <Formik
                 initialValues={{
                   email: '',
                   username: '',
                   password: '',
-                  confirmPass: '',
                 }}
                 onSubmit={(values) => {
                   console.log(values);
@@ -143,20 +133,6 @@ const Register: React.FC<Props> = ({ onSubmit }) => {
                           autoComplete='current-password'
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          value={values.confirmPass}
-                          variant='outlined'
-                          required
-                          fullWidth
-                          onChange={handleChange}
-                          name='confirmPass'
-                          label='Επιβεβαίωση κωδικού'
-                          type='password'
-                          id='confirmPass'
-                          autoComplete='confirm-password'
-                        />
-                      </Grid>
                     </Grid>
                     <Button
                       type='submit'
@@ -169,7 +145,7 @@ const Register: React.FC<Props> = ({ onSubmit }) => {
                         fontWeight: 'bold',
                       }}
                     >
-                      ΕΓΓΡΑΦΗ
+                      Συνδεση
                     </Button>
                     <Grid
                       container
@@ -193,4 +169,4 @@ const Register: React.FC<Props> = ({ onSubmit }) => {
   );
 };
 
-export default Register;
+export default Login;
