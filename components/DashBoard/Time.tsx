@@ -5,7 +5,7 @@ const Time: React.FC = () => {
     <div>
       <h1 style={{ color: 'white', fontSize: '8vh' }}>
         20.18
-        <br /> <h4 style={{ fontSize: '2vh' }}> Καλησπέρα Panos61 </h4>
+        <br /> <h4 style={{ fontSize: '2vh' }}> Καλώς ήρθες επισκέπτη/τρια </h4>
       </h1>
     </div>
   );
