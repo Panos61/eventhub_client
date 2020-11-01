@@ -10,6 +10,8 @@ import Time from '../components/DashBoard/Time';
 import GridContainer from '../components/Grid/GridContainer';
 import GridItem from '../components/Grid/GridItem';
 import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import RoomTwoToneIcon from '@material-ui/icons/RoomTwoTone';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -57,13 +59,19 @@ export default function Index() {
           <GridContainer>
             <GridItem>
               <Time />
+
+              <div style={{ display: 'flex' }}>
+                <RoomTwoToneIcon />
+                {'  '}
+                Florina
+              </div>
               <h4>
                 Δημιουργήστε ή αναζητήστε κάθε νέο event στην περιοχή σας!
               </h4>
               <br />
-              <Button href='https://www.youtube.com/watch?v=dQw4w9WgXcQ&ref=creativetim'>
-                <i className='fas fa-play' />
-                Watch video
+              <Button style={{ backgroundColor: 'white', color: '#e65100' }}>
+                <AddIcon />
+                Event
               </Button>
             </GridItem>
           </GridContainer>
