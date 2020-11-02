@@ -72,7 +72,7 @@ const Register: React.FC<Props> = ({ onSubmit }) => {
           </Link>
         </Fab>
       </Box>
-      <Box mt={10}>
+      <Box mt={5}>
         <Container maxWidth='sm'>
           <Card className={classes.root} elevation={5}>
             <CardContent>

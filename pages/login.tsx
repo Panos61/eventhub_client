@@ -82,7 +82,6 @@ const Login: React.FC<Props> = ({ onSubmit }) => {
               <Formik
                 initialValues={{
                   email: '',
-                  username: '',
                   password: '',
                 }}
                 onSubmit={(values) => {
@@ -106,19 +105,7 @@ const Login: React.FC<Props> = ({ onSubmit }) => {
                           autoComplete='email'
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          value={values.username}
-                          variant='outlined'
-                          required
-                          fullWidth
-                          onChange={handleChange}
-                          id='username'
-                          label='Username'
-                          name='username'
-                          autoComplete='username'
-                        />
-                      </Grid>
+                      <Grid item xs={12}></Grid>
                       <Grid item xs={12}>
                         <TextField
                           value={values.password}
