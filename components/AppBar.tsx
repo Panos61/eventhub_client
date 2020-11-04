@@ -45,7 +45,31 @@ const App: React.FC = () => {
   } else if (data && data.me) {
     body = <div style={{ color: 'white' }}> {data.me.username} </div>;
   } else {
-    body = <div>not logged in</div>;
+    body = (
+      <div>
+        <Button
+          style={{
+            color: '#ec407a',
+            fontWeight: 'bold',
+          }}
+        >
+          <Link href='/login'>
+            <a style={{ textDecoration: 'none', color: '#ec407a' }}>ΣΥΝΔΕΣΗ</a>
+          </Link>
+        </Button>
+
+        <Button
+          style={{
+            color: '#ec407a',
+            fontWeight: 'bold',
+          }}
+        >
+          <Link href='/register'>
+            <a style={{ textDecoration: 'none', color: '#ec407a' }}>ΕΓΓΡΑΦΗ</a>
+          </Link>
+        </Button>
+      </div>
+    );
   }
 
   const [navBackground, setNavBackground] = useState('appBarTransparent');
@@ -86,32 +110,6 @@ const App: React.FC = () => {
               </a>
             </Link>
           </Typography>
-
-          <Button
-            style={{
-              color: '#ec407a',
-              fontWeight: 'bold',
-            }}
-          >
-            <Link href='/login'>
-              <a style={{ textDecoration: 'none', color: '#ec407a' }}>
-                ΣΥΝΔΕΣΗ
-              </a>
-            </Link>
-          </Button>
-
-          <Button
-            style={{
-              color: '#ec407a',
-              fontWeight: 'bold',
-            }}
-          >
-            <Link href='/register'>
-              <a style={{ textDecoration: 'none', color: '#ec407a' }}>
-                ΕΓΓΡΑΦΗ
-              </a>
-            </Link>
-          </Button>
           {body}
         </Toolbar>
       </AppBar>
