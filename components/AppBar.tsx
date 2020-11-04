@@ -5,6 +5,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Link from 'next/link';
+import { useMeQuery } from '../src/generated/graphql';
+//import { setAccessToken } from '../src/utils/accessToken';
 
 //import IconButton from '@material-ui/core/IconButton';
 
@@ -33,6 +35,18 @@ const useStyles = makeStyles((theme) => ({
 
 const App: React.FC = () => {
   const classes = useStyles();
+
+  const { data, loading } = useMeQuery();
+
+  let body: any = null;
+
+  if (loading) {
+    body = null;
+  } else if (data && data.me) {
+    body = <div style={{ color: 'white' }}> {data.me.username} </div>;
+  } else {
+    body = <div>not logged in</div>;
+  }
 
   const [navBackground, setNavBackground] = useState('appBarTransparent');
   const navRef: any = React.useRef();
@@ -85,6 +99,7 @@ const App: React.FC = () => {
               </a>
             </Link>
           </Button>
+
           <Button
             style={{
               color: '#ec407a',
@@ -97,6 +112,7 @@ const App: React.FC = () => {
               </a>
             </Link>
           </Button>
+          {body}
         </Toolbar>
       </AppBar>
     </div>
