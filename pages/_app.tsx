@@ -13,6 +13,7 @@ import jwtDecode from 'jwt-decode';
 import { onError } from 'apollo-link-error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { HttpLink } from 'apollo-link-http';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const cache = new InMemoryCache({});
 
@@ -118,7 +119,11 @@ export default function MyApp(props: AppProps) {
   }, []);
 
   if (loading) {
-    return <div>loading </div>;
+    return (
+      <div style={{ position: 'absolute', left: '50%', top: '50%' }}>
+        <CircularProgress color='secondary' />
+      </div>
+    );
   }
 
   return (
