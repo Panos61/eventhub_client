@@ -1,20 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-} from '@apollo/client';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
 import { getAccessToken, setAccessToken } from '../src/utils/accessToken';
 import { ApolloLink, Observable } from 'apollo-link';
 import jwtDecode from 'jwt-decode';
 import { onError } from 'apollo-link-error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
+import { HttpLink } from 'apollo-link-http';
 
 const cache = new InMemoryCache({});
 
@@ -84,22 +82,23 @@ const client = new ApolloClient({
         console.warn('Your refresh token is invalid. Try to relogin');
         console.error(err);
       },
-    }),
+    }) as any,
     onError(({ graphQLErrors, networkError }) => {
       console.log(graphQLErrors);
       console.log(networkError);
     }),
     requestLink,
-    new createHttpLink({
+    new HttpLink({
       uri: 'http://localhost:4000/graphql',
       credentials: 'include',
     }),
   ]) as any,
   cache,
-});
+}) as any;
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -107,18 +106,32 @@ export default function MyApp(props: AppProps) {
     if (jssStyles) {
       jssStyles.parentElement!.removeChild(jssStyles);
     }
+
+    fetch('http://localhost:4000/refresh-token', {
+      method: 'POST',
+      credentials: 'include',
+    }).then(async (x) => {
+      const { accessToken } = await x.json();
+      setAccessToken(accessToken);
+      setLoading(false);
+    });
   }, []);
+
+  if (loading) {
+    return <div>loading </div>;
+  }
 
   return (
     <React.Fragment>
-      <Head>
-        <title>eventhub_</title>
-        <meta
-          name='viewport'
-          content='minimum-scale=1, initial-scale=1, width=device-width'
-        />
-      </Head>
       <ApolloProvider client={client}>
+        <Head>
+          <title>eventhub_</title>
+          <meta
+            name='viewport'
+            content='minimum-scale=1, initial-scale=1, width=device-width'
+          />
+        </Head>
+
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
