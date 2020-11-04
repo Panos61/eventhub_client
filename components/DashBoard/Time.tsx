@@ -12,11 +12,11 @@ const Time: React.FC = () => {
     );
   } else if (data && data.me?.username) {
     body = (
-      <span style={{ fontSize: '2vh' }}>Καλώς ήρθες {data.me?.username}</span>
+      <span style={{ fontSize: '2vh' }}>Καλώς όρισες {data.me?.username}</span>
     );
   } else {
     body = (
-      <span style={{ fontSize: '2vh' }}> Καλώς ήρθες επισκέπτη/τρια </span>
+      <span style={{ fontSize: '2vh' }}> Καλώς όρισες επισκέπτη/τρια </span>
     );
   }
 

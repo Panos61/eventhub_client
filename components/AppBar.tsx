@@ -43,7 +43,12 @@ const App: React.FC = () => {
   if (loading) {
     body = null;
   } else if (data && data.me) {
-    body = <div style={{ color: 'white' }}> {data.me.username} </div>;
+    body = (
+      <div style={{ color: 'white', fontWeight: 'bold', fontSize: '15px' }}>
+        {' '}
+        {data.me.username}{' '}
+      </div>
+    );
   } else {
     body = (
       <div>
