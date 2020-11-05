@@ -5,20 +5,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Link from 'next/link';
-import { useLogoutMutation, useMeQuery } from '../src/generated/graphql';
-import { setAccessToken } from '../src/utils/accessToken';
+import { useMeQuery } from '../src/generated/graphql';
 import LogoutMenu from './DashBoard/LogoutMenu';
-//import { setAccessToken } from '../src/utils/accessToken';
 
-//import IconButton from '@material-ui/core/IconButton';
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    color: 'white',
   },
   title: {
     flexGrow: 1,
@@ -39,37 +31,13 @@ const App: React.FC = () => {
   const classes = useStyles();
 
   const { data, loading } = useMeQuery();
-  const [logout, { client }] = useLogoutMutation();
 
   let body: any = null;
 
   if (loading) {
     body = null;
   } else if (data && data.me) {
-    body = (
-      <div
-        style={{
-          color: 'white',
-          fontWeight: 'bold',
-          fontSize: '15px',
-          display: 'flex',
-        }}
-      >
-        {' '}
-        {data.me.username}{' '}
-        {!loading && data && data.me ? (
-          <button
-            onClick={async () => {
-              await logout();
-              setAccessToken('');
-              await client!.resetStore();
-            }}
-          >
-            logout
-          </button>
-        ) : null}
-      </div>
-    );
+    body = <LogoutMenu />;
   } else {
     body = (
       <div>
@@ -122,13 +90,6 @@ const App: React.FC = () => {
     <div className={classes.root}>
       <AppBar position='fixed' className={classes[navRef.current]}>
         <Toolbar>
-          {/* <IconButton
-            edge='start'
-            className={classes.menuButton}
-            aria-label='menu'
-          >
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant='h6' className={classes.title}>
             <Link href='/'>
               <a style={{ textDecoration: 'none', color: '#ec407a' }}>
