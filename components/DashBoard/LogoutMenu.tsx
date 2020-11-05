@@ -28,7 +28,7 @@ const LogoutMenu: React.FC = () => {
       </span>
     );
   } else {
-    body = <span style={{ color: 'white' }}>hahahah</span>;
+    body = '';
   }
 
   return (
