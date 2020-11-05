@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
@@ -172,8 +172,8 @@ const Login: React.FC<Props> = ({}) => {
                       style={{ textAlign: 'center' }}
                     >
                       <Grid item xs={12}>
-                        <Link href='/login'>
-                          Έχετε ήδη λογαριασμό; Συνδεθείτε!
+                        <Link href='/register'>
+                          Δεν έχετε λογαριασμό; Εγγραφείτε!
                         </Link>
                       </Grid>
                     </Grid>

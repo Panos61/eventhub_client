@@ -5,7 +5,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Link from 'next/link';
-import { useMeQuery } from '../src/generated/graphql';
+import { useLogoutMutation, useMeQuery } from '../src/generated/graphql';
+import { setAccessToken } from '../src/utils/accessToken';
+import LogoutMenu from './DashBoard/LogoutMenu';
 //import { setAccessToken } from '../src/utils/accessToken';
 
 //import IconButton from '@material-ui/core/IconButton';
@@ -37,6 +39,7 @@ const App: React.FC = () => {
   const classes = useStyles();
 
   const { data, loading } = useMeQuery();
+  const [logout, { client }] = useLogoutMutation();
 
   let body: any = null;
 
@@ -44,9 +47,27 @@ const App: React.FC = () => {
     body = null;
   } else if (data && data.me) {
     body = (
-      <div style={{ color: 'white', fontWeight: 'bold', fontSize: '15px' }}>
+      <div
+        style={{
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '15px',
+          display: 'flex',
+        }}
+      >
         {' '}
         {data.me.username}{' '}
+        {!loading && data && data.me ? (
+          <button
+            onClick={async () => {
+              await logout();
+              setAccessToken('');
+              await client!.resetStore();
+            }}
+          >
+            logout
+          </button>
+        ) : null}
       </div>
     );
   } else {
