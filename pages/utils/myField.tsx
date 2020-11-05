@@ -7,11 +7,13 @@ export const myField: React.FC<FieldProps & TextFieldProps> = ({
   placeholder,
   field,
   label,
+  type,
 }) => {
   return (
     <TextField
       placeholder={placeholder}
       label={label}
+      type={type}
       required
       variant='outlined'
       fullWidth

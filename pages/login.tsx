@@ -133,6 +133,7 @@ const Login: React.FC<Props> = ({}) => {
                         <Field
                           id='email'
                           label='Email'
+                          type='email'
                           name='email'
                           autoComplete='email'
                           component={myField}
@@ -141,9 +142,9 @@ const Login: React.FC<Props> = ({}) => {
 
                       <Grid item xs={12}>
                         <Field
+                          type='password'
                           name='password'
                           label='Κωδικός'
-                          type='password'
                           id='password'
                           autoComplete='current-password'
                           component={myField}
