@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
   parallax: {
-    height: '70vh',
+    height: '85vh',
     maxHeight: '1000px',
     overflow: 'hidden',
     position: 'relative',
@@ -16,7 +16,6 @@ const useStyles = makeStyles(() => ({
     border: '0',
     display: 'flex',
     alignItems: 'center',
-    // zIndex: -10,
   },
   filter: {
     '&:before': {

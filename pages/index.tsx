@@ -12,7 +12,9 @@ import GridItem from '../components/Grid/GridItem';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RoomTwoToneIcon from '@material-ui/icons/RoomTwoTone';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import EventChips from '../components/DashBoard/EventChips';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -69,10 +71,25 @@ export default function Index() {
                 Δημιουργήστε ή αναζητήστε κάθε νέο event στην περιοχή σας!
               </h4>
               <br />
-              <Button style={{ backgroundColor: 'white', color: '#e65100' }}>
-                <AddIcon />
-                Event
-              </Button>
+              <div style={{ display: 'flex' }}>
+                <Button style={{ backgroundColor: 'white', color: '#e65100' }}>
+                  <AddIcon />
+                  Event
+                </Button>
+                <Button
+                  style={{
+                    backgroundColor: 'white',
+                    color: 'green',
+                    marginLeft: '15px',
+                  }}
+                >
+                  <InfoOutlinedIcon />
+                  Ιnfo
+                </Button>
+              </div>
+            </GridItem>
+            <GridItem>
+              <EventChips />
             </GridItem>
           </GridContainer>
         </div>
