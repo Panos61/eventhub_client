@@ -158,6 +158,9 @@ const Login: React.FC<Props> = ({}) => {
                           autoComplete='username'
                           component={myField}
                         />
+                        <FormHelperText>
+                          Επιτρέπεται από 4 μέχρι 12 χαρακτήρες.
+                        </FormHelperText>
                       </Grid>
 
                       <Grid item xs={12}>
@@ -169,6 +172,9 @@ const Login: React.FC<Props> = ({}) => {
                           autoComplete='current-password'
                           component={myField}
                         />
+                        <FormHelperText>
+                          Επιτρέπεται από 4 μέχρι 12 χαρακτήρες.
+                        </FormHelperText>
                       </Grid>
                     </Grid>
                     <Button

@@ -22,7 +22,7 @@ export default function EventChips() {
 
   return (
     <div className={classes.root}>
-      <Link href='/register'>
+      <Link href='/events/music'>
         <Chip
           label='Μουσική'
           variant='outlined'

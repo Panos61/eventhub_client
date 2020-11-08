@@ -3,7 +3,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ProTip from '../src/ProTip';
-import Link from '../src/Link';
+import Link from 'next/link';
 import AppBar from '../components/AppBar';
 import Parallax from '../views/Parallax';
 import Time from '../components/DashBoard/Time';
@@ -72,10 +72,14 @@ export default function Index() {
               </h4>
               <br />
               <div style={{ display: 'flex' }}>
-                <Button style={{ backgroundColor: 'white', color: '#e65100' }}>
-                  <AddIcon />
-                  Event
-                </Button>
+                <Link href='create-event'>
+                  <Button
+                    style={{ backgroundColor: 'white', color: '#e65100' }}
+                  >
+                    <AddIcon />
+                    <a>Event</a>
+                  </Button>
+                </Link>
                 <Button
                   style={{
                     backgroundColor: 'white',
