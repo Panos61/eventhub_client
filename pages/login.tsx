@@ -19,7 +19,8 @@ import {
 import { toErrorMap } from '../src/utils/toErrorMap';
 import { useRouter } from 'next/router';
 import { setAccessToken } from '../src/utils/accessToken';
-import { myField } from './utils/myField';
+import { InputField } from './utils/InputField';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,29 +93,45 @@ const Login: React.FC<Props> = ({}) => {
                   email: '',
                   password: '',
                 }}
-                onSubmit={async (values, { setErrors }) => {
+                validate={(values) => {
+                  const errors: Partial<Values> = {};
+                  if (!values.email) {
+                    errors.email = 'Υποχρεωτικό πεδίο!';
+                  } else if (
+                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(
+                      values.email
+                    )
+                  ) {
+                    errors.email = 'Μη έγκυρη μορφή email!';
+                  }
+                  if (!values.password) {
+                    errors.password = 'Υποχρεωτικό πεδίο!';
+                  }
+                  return errors;
+                }}
+                onSubmit={async (values, { setSubmitting, setErrors }) => {
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, 200);
                   const response = await login({
                     variables: values,
 
                     update: (cache, { data }) => {
-                      cache.writeQuery<MeQuery>({
+                      cache.writeQuery<MeQuery | any>({
                         query: MeDocument,
                         data: {
                           __typename: 'Query',
                           me: data?.login.user,
                         },
                       });
-                      //  cache.evict({ fieldName: 'posts:{}' });
                     },
                   });
+
                   if (response.data?.login.errors) {
+                    setTimeout(() => {
+                      setSubmitting(false);
+                    }, 500);
                     setErrors(toErrorMap(response.data.login.errors));
-                    console.log(toErrorMap(response.data.login.errors));
-                    return (
-                      <div style={{ color: 'white', fontSize: '20px' }}>
-                        error
-                      </div>
-                    );
                   } else if (response.data?.login.user) {
                     if (typeof router.query.next === 'string') {
                       router.push(router.query.next);
@@ -126,51 +143,50 @@ const Login: React.FC<Props> = ({}) => {
                   }
                 }}
               >
-                {({ values }) => (
+                {({ submitForm, isSubmitting }) => (
                   <Form className={classes.form} noValidate>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Field
-                          id='email'
-                          label='Email'
-                          type='email'
+                          component={InputField}
                           name='email'
-                          autoComplete='email'
-                          component={myField}
+                          type='email'
+                          label='Email'
                         />
                       </Grid>
 
                       <Grid item xs={12}>
                         <Field
+                          component={InputField}
                           type='password'
-                          name='password'
                           label='Κωδικός'
-                          id='password'
-                          autoComplete='current-password'
-                          component={myField}
+                          name='password'
                         />
                       </Grid>
                     </Grid>
-                    <Button
-                      type='submit'
-                      fullWidth
-                      variant='contained'
-                      className={classes.submit}
-                      style={{
-                        backgroundColor: '#f44336',
-                        color: 'white',
-                        fontWeight: 'bold',
-                      }}
-                      onClick={() => {
-                        console.log(values);
-                      }}
-                    >
-                      Συνδεση
-                    </Button>
+                    {isSubmitting && <LinearProgress />}
+                    <br />
+
+                    <Box mt={2}>
+                      <Button
+                        type='submit'
+                        fullWidth
+                        variant='contained'
+                        style={{
+                          backgroundColor: '#f44336',
+                          color: 'white',
+                          fontWeight: 'bold',
+                        }}
+                        disabled={isSubmitting}
+                        onClick={submitForm}
+                      >
+                        Συνδεση
+                      </Button>
+                    </Box>
                     <Grid
                       container
                       justify='flex-end'
-                      style={{ textAlign: 'center' }}
+                      style={{ textAlign: 'center', marginTop: '15px' }}
                     >
                       <Grid item xs={12}>
                         <Link href='/register'>
