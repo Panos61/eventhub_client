@@ -1,26 +1,27 @@
 import React from 'react';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Link from 'next/link';
 import Head from 'next/head';
-import Fab from '@material-ui/core/Fab';
-import { Form, Formik, Field } from 'formik';
+import Box from '@material-ui/core/Box';
+import { useRouter } from 'next/router';
 import {
   MeDocument,
   MeQuery,
   useRegisterMutation,
 } from '../src/generated/graphql';
-import { toErrorMap } from '../src/utils/toErrorMap';
-import { useRouter } from 'next/router';
 import { setAccessToken } from '../src/utils/accessToken';
-import { myField } from './utils/myField';
-import { FormHelperText } from '@material-ui/core';
+import { toErrorMap } from '../src/utils/toErrorMap';
+import { InputField } from './utils/InputField';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Link from 'next/link';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Fab from '@material-ui/core/Fab';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,21 +47,11 @@ body {
 }
 `;
 
-interface Values {
-  email: string;
-  password: string;
-}
-
-interface Props {
-  onSubmit: (values: Values) => void;
-}
-
-const Login: React.FC<Props> = ({}) => {
+const Register: React.FC = () => {
   const classes = useStyles();
 
   const router = useRouter();
   const [register] = useRegisterMutation();
-
   return (
     <>
       <Head>
@@ -80,6 +71,7 @@ const Login: React.FC<Props> = ({}) => {
           </Link>
         </Fab>
       </Box>
+
       <Box mt={10}>
         <Container maxWidth='sm'>
           <Card className={classes.root} elevation={5}>
@@ -90,45 +82,47 @@ const Login: React.FC<Props> = ({}) => {
 
               <Formik
                 initialValues={{
-                  email: '',
                   username: '',
+                  email: '',
                   password: '',
+                  // confirmPassword: '',
                 }}
-                onSubmit={async (values, { setErrors }) => {
+                validationSchema={Yup.object().shape({
+                  password: Yup.string().min(
+                    6,
+                    'Ο κωδικός πρέπει να περιέχει τουλάχιστον 6 χαρακτήρες!'
+                  ),
+
+                  // confirmPassword: Yup.string()
+                  //   .oneOf([Yup.ref('password'), null], 'Passwords must match')
+                  //   .required('Confirm Password is required'),
+                })}
+                onSubmit={async (values, { setSubmitting, setErrors }) => {
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, 200);
                   const response = await register({
                     variables: { options: values },
 
                     update: (cache, { data }) => {
-                      cache.writeQuery<MeQuery>({
+                      cache.writeQuery<MeQuery | any>({
                         query: MeDocument,
                         data: {
                           __typename: 'Query',
                           me: data?.register.user,
                         },
                       });
-                      //  cache.evict({ fieldName: 'posts:{}' });
                     },
                   });
+
                   if (response.data?.register.errors) {
+                    setTimeout(() => {
+                      setSubmitting(false);
+                    }, 500);
                     setErrors(toErrorMap(response.data.register.errors));
-                    console.log(toErrorMap(response.data.register.errors));
-                    return (
-                      <FormHelperText>
-                        {response.data?.register.errors
-                          ? response.data.register.errors
-                          : ''}
-                      </FormHelperText>
-                    );
                   } else if (response.data?.register.user) {
                     if (typeof router.query.next === 'string') {
                       router.push(router.query.next);
-                      return (
-                        <h1 style={{ color: 'white', fontSize: '20px' }}>
-                          {response.data?.register.errors
-                            ? response.data.register.errors
-                            : ''}
-                        </h1>
-                      );
                     } else {
                       // worked
                       setAccessToken(response.data.register.accessToken);
@@ -136,77 +130,119 @@ const Login: React.FC<Props> = ({}) => {
                     }
                   }
                 }}
-              >
-                {({ values }) => (
+                render={({ errors, touched, isSubmitting, submitForm }) => (
                   <Form className={classes.form} noValidate>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Field
-                          id='email'
+                          name='username'
+                          label='Username'
+                          component={InputField}
+                          className={
+                            'form-control' +
+                            (errors.username && touched.username
+                              ? ' is-invalid'
+                              : '')
+                          }
+                        />
+                        {/* <ErrorMessage
+                          name='firstName'
+                          component='div'
+                          className='invalid-feedback'
+                        /> */}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Field
                           label='Email'
                           name='email'
-                          autoComplete='email'
-                          component={myField}
+                          component={InputField}
+                          type='text'
+                          className={
+                            'form-control' +
+                            (errors.email && touched.email ? ' is-invalid' : '')
+                          }
                         />
+                        {/* <ErrorMessage
+                          name='email'
+                          component='div'
+                          className='invalid-feedback'
+                        /> */}
                       </Grid>
 
                       <Grid item xs={12}>
                         <Field
-                          id='username'
-                          label='Username'
-                          name='username'
-                          autoComplete='username'
-                          component={myField}
-                        />
-                        <FormHelperText>
-                          Επιτρέπεται από 4 μέχρι 12 χαρακτήρες.
-                        </FormHelperText>
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <Field
-                          name='password'
                           label='Κωδικός'
+                          name='password'
                           type='password'
-                          id='password'
-                          autoComplete='current-password'
-                          component={myField}
+                          component={InputField}
+                          className={
+                            'form-control' +
+                            (errors.password && touched.password
+                              ? ' is-invalid'
+                              : '')
+                          }
                         />
-                        <FormHelperText>
-                          Επιτρέπεται από 4 μέχρι 12 χαρακτήρες.
-                        </FormHelperText>
+                        {/* <ErrorMessage
+                          name='password'
+                          component='div'
+                          className='invalid-feedback'
+                        /> */}
                       </Grid>
+
+                      {/* <Grid item xs={12}>
+                        <Field
+                          label='Κωδικός'
+                          name='password'
+                          type='password'
+                          component={InputField}
+                          className={
+                            'form-control' +
+                            (errors.confirmPassword && touched.confirmPassword
+                              ? ' is-invalid'
+                              : '')
+                          }
+                        />
+                        <ErrorMessage
+                          name='confirmPassword'
+                          component='div'
+                          className='invalid-feedback'
+                        />
+                      </Grid> */}
                     </Grid>
-                    <Button
-                      type='submit'
-                      fullWidth
-                      variant='contained'
-                      className={classes.submit}
-                      style={{
-                        backgroundColor: '#f44336',
-                        color: 'white',
-                        fontWeight: 'bold',
-                      }}
-                      onClick={() => {
-                        console.log(values);
-                      }}
-                    >
-                      Εγγραφη
-                    </Button>
+                    {isSubmitting && <LinearProgress />}
+                    <br />
+
+                    <Box mt={2}>
+                      <Button
+                        type='submit'
+                        fullWidth
+                        variant='contained'
+                        style={{
+                          backgroundColor: '#f44336',
+                          color: 'white',
+                          fontWeight: 'bold',
+                        }}
+                        disabled={isSubmitting}
+                        onClick={submitForm}
+                      >
+                        Εγγραφη
+                      </Button>
+                    </Box>
                     <Grid
                       container
                       justify='flex-end'
-                      style={{ textAlign: 'center' }}
+                      style={{ textAlign: 'center', marginTop: '15px' }}
                     >
                       <Grid item xs={12}>
                         <Link href='/login'>
-                          Έχετε ήδη λογαριασμό; Συνδεθείτε!
+                          Δεν έχετε λογαριασμό; Συνδεθείτε!
                         </Link>
                       </Grid>
                     </Grid>
+                    <Button type='reset'>ΕΠΑΝΑΦΟΡΑ</Button>
                   </Form>
                 )}
-              </Formik>
+              />
             </CardContent>
           </Card>
         </Container>
@@ -215,4 +251,4 @@ const Login: React.FC<Props> = ({}) => {
   );
 };
 
-export default Login;
+export default Register;

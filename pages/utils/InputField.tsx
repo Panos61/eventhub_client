@@ -35,7 +35,33 @@ export const InputField: React.FC<InputFieldProps | any> = ({
             .replace('email:Μη έγκυρη μορφή email!', '')
             .replace('password:Υποχρεωτικό πεδίο!', '')
             .replace('email:Υποχρεωτικό πεδίο!', '')
-            .replace('Login Error:', '')}
+            .replace('Login Error:', '')
+            .replace('username:Username is required,', '')
+            .replace(
+              '"email":"Email is required","password":"Password is required"',
+              ''
+            )
+            .replace(
+              'email:Email is required,"password":"Password is required"',
+              ''
+            )
+            .replace('password:Password is required', '')
+            .replace('password:Password must be at least 6 characters', '')
+            .replace('email:Email is invalid', '')
+            .replace(
+              '"email":"Μη έγκυρη μορφή email!","password":"Password is required"',
+              ''
+            )
+            .replace('Register Error:', '')
+            .replace(
+              'Password length should be greater than 6',
+              'Ο κωδικός θα πρέπει να είναι μεγαλύτερος από 6 χαρακτήρες!'
+            )
+            .replace('Invalid Error', 'Λάθος μορφή email!')
+            .replace(
+              'Email or Username already taken.',
+              'Το email ή ο κωδικός χρησιμοποιούνται ήδη!'
+            )}
         </FormHelperText>
       ) : (
         ''
