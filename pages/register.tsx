@@ -235,7 +235,7 @@ const Register: React.FC = () => {
                     >
                       <Grid item xs={12}>
                         <Link href='/login'>
-                          Δεν έχετε λογαριασμό; Συνδεθείτε!
+                          Έχετε ήδη λογαριασμό; Συνδεθείτε!
                         </Link>
                       </Grid>
                     </Grid>
