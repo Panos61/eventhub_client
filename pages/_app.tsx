@@ -14,6 +14,7 @@ import { onError } from 'apollo-link-error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { HttpLink } from 'apollo-link-http';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Layout from '../components/Layout';
 
 const cache = new InMemoryCache({});
 
@@ -136,12 +137,14 @@ export default function MyApp(props: AppProps) {
             content='minimum-scale=1, initial-scale=1, width=device-width'
           />
         </Head>
+        <Layout>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
 
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </Layout>
       </ApolloProvider>
     </React.Fragment>
   );
