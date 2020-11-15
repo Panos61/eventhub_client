@@ -72,6 +72,9 @@ const CreateEvent: React.FC<createProps> = () => {
           <Paper elevation={3} className={classes.paper}>
             <Box mt={20}>
               <Grid item xs={12} className={classes.formRoot}>
+                <h4>
+                  Δημιουργία μονού event σε συγκεκριμένη ημερομηνία διεξαγωγής.
+                </h4>
                 <Link href='create-single-event'>
                   <Button
                     variant='contained'
@@ -83,6 +86,8 @@ const CreateEvent: React.FC<createProps> = () => {
                 </Link>
               </Grid>
               <Grid item xs={12} className={classes.formRoot}>
+                <h4>Δημιουργία festival με χρονικό εύρος.</h4>
+
                 <Button
                   variant='contained'
                   className={classes.button}
@@ -91,6 +96,13 @@ const CreateEvent: React.FC<createProps> = () => {
                 >
                   Festival
                 </Button>
+                <div style={{ marginTop: '25vh' }}>
+                  <Link href='/about'>
+                    <a>
+                      <h4>Μάθετε περισσότερα</h4>
+                    </a>
+                  </Link>
+                </div>
               </Grid>
             </Box>
           </Paper>
