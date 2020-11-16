@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 
 const linkStyle = {
-  color: '#616161',
+  color: '#263238',
 };
 
 export default function Copyright() {
@@ -15,7 +15,7 @@ export default function Copyright() {
       <Typography
         variant='body2'
         align='center'
-        style={{ marginTop: '10vh', marginBottom: '1vh', color: '#bdbdbd' }}
+        style={{ marginTop: '10vh', marginBottom: '1vh', color: '#616161' }}
       >
         <Grid container spacing={0} style={{ marginBottom: '20px' }}>
           <Grid item xs={4}>

@@ -62,7 +62,8 @@ export const InputField: React.FC<InputFieldProps | any> = ({
               'Email or Username already taken.',
               'Το email ή ο κωδικός χρησιμοποιούνται ήδη!'
             )
-            .replace('password:', '')}
+            .replace('password:', '')
+            .replace(',"password":"Υποχρεωτικό πεδίο!"', '')}
         </FormHelperText>
       ) : (
         ''
