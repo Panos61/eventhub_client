@@ -1,0 +1,13 @@
+mutation createEvent($options: EventInput!) {
+  createEvent(options: $options) {
+    errors {
+      field
+      message
+    }
+    event {
+      title
+      topic
+      description
+    }
+  }
+}
