@@ -15,6 +15,27 @@ export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   me?: Maybe<User>;
+  event: Scalars['String'];
+  findEvent?: Maybe<Event>;
+  events?: Maybe<Array<Event>>;
+  musicEvents?: Maybe<Array<Event>>;
+};
+
+
+export type QueryFindEventArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryEventsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
+
+export type QueryMusicEventsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 export type User = {
@@ -27,11 +48,24 @@ export type User = {
   updatedAt: Scalars['String'];
 };
 
+export type Event = {
+  __typename?: 'Event';
+  id: Scalars['Float'];
+  title: Scalars['String'];
+  topic: Scalars['String'];
+  description: Scalars['String'];
+  creatorId: Scalars['Int'];
+  creator?: Maybe<User>;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  createEvent: EventResponse;
 };
 
 
@@ -45,11 +79,16 @@ export type MutationLoginArgs = {
   email: Scalars['String'];
 };
 
+
+export type MutationCreateEventArgs = {
+  options: EventInput;
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
-  accessToken: Scalars['String'];
+  accessToken?: Maybe<Scalars['String']>;
 };
 
 export type FieldError = {
@@ -63,6 +102,43 @@ export type RegisterInput = {
   username: Scalars['String'];
   password: Scalars['String'];
 };
+
+export type EventResponse = {
+  __typename?: 'EventResponse';
+  errors?: Maybe<Array<FieldErrorEvent>>;
+  event?: Maybe<Event>;
+};
+
+export type FieldErrorEvent = {
+  __typename?: 'FieldErrorEvent';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type EventInput = {
+  title: Scalars['String'];
+  topic: Scalars['String'];
+  description: Scalars['String'];
+};
+
+export type CreateEventMutationVariables = Exact<{
+  options: EventInput;
+}>;
+
+
+export type CreateEventMutation = (
+  { __typename?: 'Mutation' }
+  & { createEvent: (
+    { __typename?: 'EventResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldErrorEvent' }
+      & Pick<FieldErrorEvent, 'field' | 'message'>
+    )>>, event?: Maybe<(
+      { __typename?: 'Event' }
+      & Pick<Event, 'title' | 'topic' | 'description'>
+    )> }
+  ) }
+);
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -113,6 +189,20 @@ export type RegisterMutation = (
   ) }
 );
 
+export type EventsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
+
+
+export type EventsQuery = (
+  { __typename?: 'Query' }
+  & { events?: Maybe<Array<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'title' | 'topic' | 'description' | 'createdAt'>
+  )>> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -124,7 +214,65 @@ export type MeQuery = (
   )> }
 );
 
+export type MusicEventsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
 
+
+export type MusicEventsQuery = (
+  { __typename?: 'Query' }
+  & { events?: Maybe<Array<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'title' | 'topic' | 'description' | 'createdAt'>
+    & { creator?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'username'>
+    )> }
+  )>> }
+);
+
+
+export const CreateEventDocument = gql`
+    mutation createEvent($options: EventInput!) {
+  createEvent(options: $options) {
+    errors {
+      field
+      message
+    }
+    event {
+      title
+      topic
+      description
+    }
+  }
+}
+    `;
+export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, baseOptions);
+      }
+export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
+export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -237,6 +385,44 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const EventsDocument = gql`
+    query Events($limit: Int!, $cursor: String) {
+  events(cursor: $cursor, limit: $limit) {
+    id
+    title
+    topic
+    description
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useEventsQuery__
+ *
+ * To run a query within a React component, call `useEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useEventsQuery(baseOptions?: Apollo.QueryHookOptions<EventsQuery, EventsQueryVariables>) {
+        return Apollo.useQuery<EventsQuery, EventsQueryVariables>(EventsDocument, baseOptions);
+      }
+export function useEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventsQuery, EventsQueryVariables>) {
+          return Apollo.useLazyQuery<EventsQuery, EventsQueryVariables>(EventsDocument, baseOptions);
+        }
+export type EventsQueryHookResult = ReturnType<typeof useEventsQuery>;
+export type EventsLazyQueryHookResult = ReturnType<typeof useEventsLazyQuery>;
+export type EventsQueryResult = Apollo.QueryResult<EventsQuery, EventsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -273,3 +459,44 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MusicEventsDocument = gql`
+    query musicEvents($limit: Int!, $cursor: String) {
+  events(cursor: $cursor, limit: $limit) {
+    id
+    title
+    topic
+    description
+    createdAt
+    creator {
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useMusicEventsQuery__
+ *
+ * To run a query within a React component, call `useMusicEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMusicEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMusicEventsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useMusicEventsQuery(baseOptions?: Apollo.QueryHookOptions<MusicEventsQuery, MusicEventsQueryVariables>) {
+        return Apollo.useQuery<MusicEventsQuery, MusicEventsQueryVariables>(MusicEventsDocument, baseOptions);
+      }
+export function useMusicEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MusicEventsQuery, MusicEventsQueryVariables>) {
+          return Apollo.useLazyQuery<MusicEventsQuery, MusicEventsQueryVariables>(MusicEventsDocument, baseOptions);
+        }
+export type MusicEventsQueryHookResult = ReturnType<typeof useMusicEventsQuery>;
+export type MusicEventsLazyQueryHookResult = ReturnType<typeof useMusicEventsLazyQuery>;
+export type MusicEventsQueryResult = Apollo.QueryResult<MusicEventsQuery, MusicEventsQueryVariables>;
