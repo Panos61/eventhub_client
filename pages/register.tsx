@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const globalStyle = `
 body {
-  background-color: #FF7700;
+  background-color: #061220;
 }
 `;
 
@@ -98,7 +98,7 @@ const Register: React.FC = () => {
                   setTimeout(() => {
                     setSubmitting(false);
                   }, 200);
-                  const response = await register({
+                  const response: string | any = await register({
                     variables: { options: values },
 
                     update: (cache, { data }) => {

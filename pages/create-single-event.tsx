@@ -8,6 +8,8 @@ import { isAuth } from '../src/utils/isAuth';
 import { Box, MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button/Button';
 import * as yup from 'yup';
+import { useCreateEventMutation } from '../src/generated/graphql';
+import { useRouter } from 'next/router';
 
 // Select topic options
 const options = [
@@ -89,6 +91,9 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {}
 
 const Single: React.FC<Props> = () => {
+  const [createEvent] = useCreateEventMutation();
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -97,14 +102,25 @@ const Single: React.FC<Props> = () => {
     },
 
     validationSchema: validationSchema,
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       alert(JSON.stringify(values, null, 2));
       setSubmitting(false);
+
+      const { errors } = await createEvent({
+        variables: { options: values },
+      });
+
+      if (!errors) {
+        router.push('/');
+      }
     },
   });
 
   const classes = useStyles();
+
+  // User must be logged in
   isAuth();
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>

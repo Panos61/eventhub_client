@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const globalStyle = `
 body {
-  background-color: #FF7700;
+  background-color: #061220;
 }
 `;
 
@@ -110,7 +110,7 @@ const Login: React.FC<Props> = ({}) => {
                   setTimeout(() => {
                     setSubmitting(false);
                   }, 200);
-                  const response = await login({
+                  const response: string | any = await login({
                     variables: values,
 
                     update: (cache, { data }) => {
