@@ -12,11 +12,15 @@ import { ApolloLink, Observable } from 'apollo-link';
 import jwtDecode from 'jwt-decode';
 import { onError } from 'apollo-link-error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
-import { HttpLink } from 'apollo-link-http';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Layout from '../components/Layout';
+import { createUploadLink } from 'apollo-upload-client';
 
 const cache = new InMemoryCache({});
+const link = createUploadLink({
+  uri: 'http://localhost:4000/graphql',
+  credentials: 'include',
+});
 
 const requestLink = new ApolloLink(
   (operation, forward) =>
@@ -90,10 +94,7 @@ const client = new ApolloClient({
       console.log(networkError);
     }),
     requestLink,
-    new HttpLink({
-      uri: 'http://localhost:4000/graphql',
-      credentials: 'include',
-    }),
+    link,
   ]) as any,
   cache,
 }) as any;

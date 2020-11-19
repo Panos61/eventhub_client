@@ -15,14 +15,13 @@ export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   me?: Maybe<User>;
-  event: Scalars['String'];
-  findEvent?: Maybe<Event>;
+  event?: Maybe<Event>;
   events?: Maybe<Array<Event>>;
   musicEvents?: Maybe<Array<Event>>;
 };
 
 
-export type QueryFindEventArgs = {
+export type QueryEventArgs = {
   id: Scalars['Int'];
 };
 
@@ -54,6 +53,11 @@ export type Event = {
   title: Scalars['String'];
   topic: Scalars['String'];
   description: Scalars['String'];
+  date: Scalars['String'];
+  time: Scalars['String'];
+  image: Scalars['String'];
+  adultsOnly: Scalars['Boolean'];
+  extraInfo: Scalars['String'];
   creatorId: Scalars['Int'];
   creator?: Maybe<User>;
   createdAt: Scalars['String'];
@@ -119,6 +123,11 @@ export type EventInput = {
   title: Scalars['String'];
   topic: Scalars['String'];
   description: Scalars['String'];
+  adultsOnly: Scalars['Boolean'];
+  image: Scalars['String'];
+  time: Scalars['String'];
+  date: Scalars['String'];
+  extraInfo: Scalars['String'];
 };
 
 export type CreateEventMutationVariables = Exact<{
@@ -135,7 +144,7 @@ export type CreateEventMutation = (
       & Pick<FieldErrorEvent, 'field' | 'message'>
     )>>, event?: Maybe<(
       { __typename?: 'Event' }
-      & Pick<Event, 'title' | 'topic' | 'description'>
+      & Pick<Event, 'title' | 'topic' | 'description' | 'adultsOnly' | 'time' | 'date' | 'extraInfo'>
     )> }
   ) }
 );
@@ -187,6 +196,19 @@ export type RegisterMutation = (
       & Pick<User, 'id' | 'email' | 'username'>
     )> }
   ) }
+);
+
+export type EventQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type EventQuery = (
+  { __typename?: 'Query' }
+  & { event?: Maybe<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'title' | 'topic' | 'description' | 'createdAt' | 'updatedAt' | 'extraInfo' | 'adultsOnly'>
+  )> }
 );
 
 export type EventsQueryVariables = Exact<{
@@ -244,6 +266,10 @@ export const CreateEventDocument = gql`
       title
       topic
       description
+      adultsOnly
+      time
+      date
+      extraInfo
     }
   }
 }
@@ -385,6 +411,46 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const EventDocument = gql`
+    query Event($id: Int!) {
+  event(id: $id) {
+    id
+    title
+    topic
+    description
+    createdAt
+    updatedAt
+    extraInfo
+    adultsOnly
+  }
+}
+    `;
+
+/**
+ * __useEventQuery__
+ *
+ * To run a query within a React component, call `useEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useEventQuery(baseOptions?: Apollo.QueryHookOptions<EventQuery, EventQueryVariables>) {
+        return Apollo.useQuery<EventQuery, EventQueryVariables>(EventDocument, baseOptions);
+      }
+export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventQuery, EventQueryVariables>) {
+          return Apollo.useLazyQuery<EventQuery, EventQueryVariables>(EventDocument, baseOptions);
+        }
+export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
+export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
+export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
 export const EventsDocument = gql`
     query Events($limit: Int!, $cursor: String) {
   events(cursor: $cursor, limit: $limit) {

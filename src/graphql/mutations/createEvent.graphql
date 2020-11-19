@@ -8,6 +8,10 @@ mutation createEvent($options: EventInput!) {
       title
       topic
       description
+      adultsOnly
+      time
+      date
+      extraInfo
     }
   }
 }

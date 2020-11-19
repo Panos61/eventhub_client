@@ -1,15 +1,63 @@
-import React from 'react';
+import * as React from 'react';
+import { Formik, Form, Field } from 'formik';
+import {
+  Button,
+  LinearProgress,
+  MenuItem,
+  FormControlLabel,
+} from '@material-ui/core';
+import * as yup from 'yup';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { useFormik } from 'formik';
-import TextField from '@material-ui/core/TextField/TextField';
-import { isAuth } from '../src/utils/isAuth';
-import { Box, MenuItem } from '@material-ui/core';
-import Button from '@material-ui/core/Button/Button';
-import * as yup from 'yup';
+import { TextField, Select, Switch } from 'formik-material-ui';
+import { TimePicker, DatePicker } from 'formik-material-ui-pickers';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import { useCreateEventMutation } from '../src/generated/graphql';
 import { useRouter } from 'next/router';
+// import {
+//   Autocomplete,
+//   AutocompleteRenderInputParams,
+// } from 'formik-material-ui-lab';
+import Box from '@material-ui/core/Box';
+import { isAuth } from '../src/utils/isAuth';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      margin: '0 auto',
+      width: '95%',
+      marginTop: '5vh',
+    },
+    formRoot: {
+      flexGrow: 1,
+      margin: '0 auto',
+      width: 'auto',
+      marginTop: '5vh',
+    },
+    title: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: '#4caf50',
+    },
+    paper: {
+      minHeight: '70vh',
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    form: {
+      width: '100%', // Fix IE 11 issue.
+      marginTop: theme.spacing(4),
+      color: theme.palette.error.main,
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 3),
+    },
+  })
+);
 
 // Select topic options
 const options = [
@@ -50,168 +98,217 @@ const validationSchema = yup.object().shape({
     )
     .required('Υποχρεωτικό πεδίο!'),
   topic: yup.string().required('Υποχρεωτικό πεδίο!'),
+  extraInfo: yup
+    .string()
+    .max(200, 'Υπερβαίνει τους 200 χαρακτήρες (μέχρι 200 χαρακτήρες!)'),
 });
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      margin: '0 auto',
-      width: '95%',
-      marginTop: '5vh',
-    },
-    formRoot: {
-      flexGrow: 1,
-      margin: '0 auto',
-      width: 'auto',
-      marginTop: '5vh',
-    },
-    title: {
-      fontWeight: 'bold',
-      textAlign: 'center',
-      color: '#4caf50',
-    },
-    paper: {
-      minHeight: '70vh',
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(4),
-      color: theme.palette.error.main,
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 3),
-    },
-  })
-);
+const SingleForm = () => {
+  const classes = useStyles();
 
-interface Props {}
-
-const Single: React.FC<Props> = () => {
   const [createEvent] = useCreateEventMutation();
   const router = useRouter();
-
-  const formik = useFormik({
-    initialValues: {
-      title: '',
-      topic: '',
-      description: '',
-    },
-
-    validationSchema: validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      alert(JSON.stringify(values, null, 2));
-      setSubmitting(false);
-
-      const { errors } = await createEvent({
-        variables: { options: values },
-      });
-
-      if (!errors) {
-        router.push('/');
-      }
-    },
-  });
-
-  const classes = useStyles();
 
   // User must be logged in
   isAuth();
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <h2 className={classes.title}>Δημιουργία Event</h2>
-          <Paper elevation={3} className={classes.paper}>
-            <Grid item xs={12} lg={6} className={classes.formRoot}>
-              <form onSubmit={formik.handleSubmit}>
-                <Box mt={2}>
-                  <TextField
-                    fullWidth
-                    name='title'
-                    label='Τίτλος *'
-                    color='secondary'
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    error={formik.touched.title && Boolean(formik.errors.title)}
-                    helperText={
-                      (formik.touched.title && formik.errors.title) || (
-                        <p>Εισάγετε τίτλο (από 5 μέχρι μέχρι 35 χαρακτήρες!)</p>
-                      )
-                    }
-                  />
-                </Box>
-                <Box mt={2}>
-                  <TextField
-                    fullWidth
-                    name='topic'
-                    label='Είδος *'
-                    color='secondary'
-                    select
-                    value={formik.values.topic}
-                    onChange={formik.handleChange}
-                    error={formik.touched.topic && Boolean(formik.errors.topic)}
-                    helperText={
-                      (formik.touched.topic && formik.errors.topic) || (
-                        <p>Εισάγετε είδος</p>
-                      )
-                    }
-                  >
-                    {options.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Box>
+    <Formik
+      initialValues={{
+        title: '',
+        topic: '',
+        description: '',
 
-                <Box mt={2}>
-                  <TextField
-                    fullWidth
-                    name='description'
-                    label='Περιγραφή *'
-                    multiline
-                    color='secondary'
-                    variant='outlined'
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    error={
-                      formik.touched.description &&
-                      Boolean(formik.errors.description)
-                    }
-                    helperText={
-                      (formik.touched.description &&
-                        formik.errors.description) || (
-                        <p>
-                          Εισάγετε περιγραφή (από 10 μέχρι μέχρι 5000
-                          χαρακτήρες!)
-                        </p>
-                      )
-                    }
-                  />
-                </Box>
+        adultsOnly: true,
+        date: new Date(),
+        time: new Date(),
+        image: '',
 
-                <Box mt={3}>
-                  <Button
-                    color='secondary'
-                    variant='contained'
-                    fullWidth
-                    type='submit'
-                  >
-                    ΔΗΜΙΟΥΡΓΙΑ EVENT
-                  </Button>
-                </Box>
-              </form>
+        extraInfo: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={async (values, { setSubmitting }) => {
+        setTimeout(() => {
+          setSubmitting(false);
+          alert(JSON.stringify(values, null, 2));
+        }, 500);
+
+        const { errors } = await createEvent({
+          variables: { options: values } as any | string,
+        });
+
+        if (!errors) {
+          router.push('/');
+        } else {
+          alert(JSON.stringify('Error'));
+        }
+      }}
+    >
+      {({ submitForm, isSubmitting, touched, errors, values }) => (
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <div className={classes.root}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <h2 className={classes.title}>Δημιουργία Event</h2>
+                <Paper elevation={3} className={classes.paper}>
+                  <Grid item xs={12} lg={6} className={classes.formRoot}>
+                    <p>(*) Υποχρεωτικό</p> <br />
+                    <Form>
+                      <Box margin={1}>
+                        <Field
+                          component={TextField}
+                          name='title'
+                          label='Τίτλος *'
+                          color='secondary'
+                          fullWidth
+                          value={values.title}
+                          error={touched.title && Boolean(errors.title)}
+                          helperText={
+                            (touched.title && errors.title) || (
+                              <p>
+                                Εισάγετε τίτλο (από 5 μέχρι μέχρι 35
+                                χαρακτήρες!)
+                              </p>
+                            )
+                          }
+                        />
+                      </Box>
+                      <Box mt={2}>
+                        <Field
+                          component={TextField}
+                          name='topic'
+                          label='Είδος *'
+                          color='secondary'
+                          fullWidth
+                          select
+                          value={values.topic}
+                          error={touched.topic && Boolean(errors.topic)}
+                          helperText={
+                            (touched.topic && errors.topic) || (
+                              <p>Εισάγετε είδος</p>
+                            )
+                          }
+                        >
+                          {options.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </Field>
+                      </Box>
+                      <Box mt={1}>
+                        <Field
+                          component={TextField}
+                          multiline
+                          fullWidth
+                          label='Περιγραφή *'
+                          name='description'
+                          color='secondary'
+                          variant='outlined'
+                          value={values.description}
+                          error={
+                            touched.description && Boolean(errors.description)
+                          }
+                          helperText={
+                            (touched.description && errors.description) || (
+                              <p>
+                                Εισάγετε περιγραφή (από 10 μέχρι μέχρι 5000
+                                χαρακτήρες!)
+                              </p>
+                            )
+                          }
+                        />
+                      </Box>
+                      <Box mt={1}>
+                        <Field
+                          color='secondary'
+                          style={{
+                            backgroundColor: 'red',
+
+                            color: 'white',
+                          }}
+                          name='image'
+                          type='file'
+                          fullWidth
+                        />
+                      </Box>
+
+                      <Box mt={1}>
+                        <FormControlLabel
+                          control={
+                            <Field
+                              color='secondary'
+                              component={Switch}
+                              type='checkbox'
+                              name='adultsOnly'
+                              fullWidth
+                            />
+                          }
+                          label='Άνω των 18'
+                        />
+                      </Box>
+
+                      <Box mt={1}>
+                        <Field
+                          color='secondary'
+                          component={TimePicker}
+                          name='time'
+                          label='Ώρα *'
+                          fullWidth
+                        />
+                      </Box>
+                      <Box mt={1}>
+                        <Field
+                          color='secondary'
+                          component={DatePicker}
+                          name='date'
+                          label='Ημερομηνία *'
+                          fullWidth
+                        />
+                      </Box>
+
+                      <Box mt={3}>
+                        <Field
+                          component={TextField}
+                          color='secondary'
+                          multiline
+                          name='extraInfo'
+                          fullWidth
+                          label='Επιπλέον Πληροφορίες'
+                          value={values.extraInfo}
+                          error={touched.extraInfo && Boolean(errors.extraInfo)}
+                          helperText={
+                            (touched.extraInfo && errors.extraInfo) || (
+                              <p>
+                                Επιπλέον πληροφορίες/σχόλια (μέχρι μέχρι 200
+                                χαρακτήρες!)
+                              </p>
+                            )
+                          }
+                        />
+                      </Box>
+
+                      {isSubmitting && <LinearProgress />}
+                      <Box margin={1}>
+                        <Button
+                          variant='contained'
+                          color='secondary'
+                          disabled={isSubmitting}
+                          onClick={submitForm}
+                        >
+                          ΔΗΜΙΟΥΡΓΙΑ EVENT
+                        </Button>
+                      </Box>
+                    </Form>
+                  </Grid>
+                </Paper>
+              </Grid>
             </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
-    </div>
+          </div>
+        </MuiPickersUtilsProvider>
+      )}
+    </Formik>
   );
 };
 
-export default Single;
+export default SingleForm;
