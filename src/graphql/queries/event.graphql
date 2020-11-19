@@ -1,0 +1,12 @@
+query Event($id: Int!) {
+  event(id: $id) {
+    id
+    title
+    topic
+    description
+    createdAt
+    updatedAt
+    extraInfo
+    adultsOnly
+  }
+}
