@@ -48,7 +48,7 @@ const MusicTemplate: React.FC<musicTempProps> = () => {
           <p>No events</p>
         ) : (
           <div className='flex-container'>
-            <Link href='/'>
+            <Link href='/event/[id]' as={`/event/${e.id}`}>
               <Card
                 className={classes.root}
                 key={e.id}
