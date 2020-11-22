@@ -4,6 +4,13 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useMeQuery, useLogoutMutation } from '../../src/generated/graphql';
 import { setAccessToken } from '../../src/utils/accessToken';
+import Link from 'next/link';
+
+// Style for links
+const linkStyle = {
+  textDecoration: 'none',
+  color: 'unset',
+};
 
 const LogoutMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -49,7 +56,11 @@ const LogoutMenu: React.FC = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={handleClose}>My Events</MenuItem>
-        <MenuItem onClick={handleClose}>Ρυθμίσεις</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Link href='/user-settings/[id]' as={`user-settings/${data?.me?.id}`}>
+            <a style={linkStyle}>Ρυθμίσεις</a>
+          </Link>{' '}
+        </MenuItem>
         <MenuItem
           onClick={async () => {
             await logout();

@@ -13,43 +13,45 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RoomTwoToneIcon from '@material-ui/icons/RoomTwoTone';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import EventChips from '../components/DashBoard/EventChips';
 
-const useStyles = makeStyles(() => ({
-  container: {
-    paddingRight: '15px',
-    paddingLeft: '15px',
-    marginRight: 'auto',
-    marginLeft: 'auto',
-    width: '100%',
-    color: '#FFFFFF',
-    zIndex: 12,
-    '@media (min-width: 576px)': {
-      maxWidth: '540px',
+const useStyles = makeStyles(() =>
+  createStyles({
+    container: {
+      paddingRight: '15px',
+      paddingLeft: '15px',
+      marginRight: 'auto',
+      marginLeft: 'auto',
+      width: '100%',
+      color: '#FFFFFF',
+      zIndex: 12,
+      '@media (min-width: 576px)': {
+        maxWidth: '540px',
+      },
+      '@media (min-width: 768px)': {
+        maxWidth: '720px',
+      },
+      '@media (min-width: 992px)': {
+        maxWidth: '960px',
+      },
+      '@media (min-width: 1200px)': {
+        maxWidth: '1140px',
+      },
     },
-    '@media (min-width: 768px)': {
-      maxWidth: '720px',
+    title: {
+      display: 'inline-block',
+      position: 'relative',
+      marginTop: '30px',
+      minHeight: '32px',
+      textDecoration: 'none',
+      color: '#FFFFFF',
+      margin: '1.75rem 0 0.875rem',
+      fontWeight: 700,
+      fontFamily: `"Roboto Slab", "Times New Roman", serif`,
     },
-    '@media (min-width: 992px)': {
-      maxWidth: '960px',
-    },
-    '@media (min-width: 1200px)': {
-      maxWidth: '1140px',
-    },
-  },
-  title: {
-    display: 'inline-block',
-    position: 'relative',
-    marginTop: '30px',
-    minHeight: '32px',
-    textDecoration: 'none',
-    color: '#FFFFFF',
-    margin: '1.75rem 0 0.875rem',
-    fontWeight: '700',
-    fontFamily: `"Roboto Slab", "Times New Roman", serif`,
-  },
-}));
+  })
+);
 
 export default function Index() {
   const classes = useStyles();
@@ -80,16 +82,18 @@ export default function Index() {
                     <a>Event</a>
                   </Button>
                 </Link>
-                <Button
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'green',
-                    marginLeft: '15px',
-                  }}
-                >
-                  <InfoOutlinedIcon />
-                  Ιnfo
-                </Button>
+                <Link href='about'>
+                  <Button
+                    style={{
+                      backgroundColor: 'white',
+                      color: 'green',
+                      marginLeft: '15px',
+                    }}
+                  >
+                    <InfoOutlinedIcon />
+                    Ιnfo
+                  </Button>
+                </Link>
               </div>
             </GridItem>
             <GridItem>
