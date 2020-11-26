@@ -13,6 +13,13 @@ import { useRouter } from 'next/router';
 import { Box, Container, Divider, makeStyles } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
 import Grid from '@material-ui/core/Grid/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import { InputField } from '../../utils/InputField';
 import Link from 'next/link';
@@ -43,6 +50,18 @@ const useStyles = makeStyles((theme) => ({
 const UserSecurity: React.FC<Props> = () => {
   const router = useRouter();
   const classes = useStyles();
+
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [deleteAccount, { client, error }] = useDeleteAccountMutation();
   const { data } = useMeQuery();
@@ -178,25 +197,58 @@ const UserSecurity: React.FC<Props> = () => {
             color: 'white',
           }}
           variant='contained'
-          onClick={async () => {
-            await deleteAccount({
-              variables: { id: data?.me?.id } as any,
-            });
-
-            console.log(data?.me?.id);
-            setAccessToken('');
-            await client.resetStore();
-
-            if (!error) {
-              router.push('/');
-            } else {
-              alert(error);
-            }
-          }}
+          onClick={handleClickOpen}
         >
           Διαγραφή λογαριασμού
         </Button>
       </Box>
+
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='responsive-dialog-title'
+      >
+        <DialogTitle id='responsive-dialog-title'>
+          {'Επιβεβαίωση διαγραφής λογαριασμού'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Με την διαγραφή του λογαριασμού σας, θα διαγραφούν τα events που
+            δημιουργήσατε, καθώς επίσης και όλες οι ενέργειες που σχετίζονται με
+            τον λογαριασμό σας στο eventhub!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={handleClose}
+            style={{ textTransform: 'none' }}
+          >
+            Πίσω
+          </Button>
+          <Button
+            onClick={async () => {
+              await deleteAccount({
+                variables: { id: data?.me?.id } as any,
+              });
+
+              setAccessToken('');
+              await client.resetStore();
+
+              if (!error) {
+                router.push('/');
+              } else {
+                alert(error);
+              }
+            }}
+            autoFocus
+            style={{ textTransform: 'none', color: 'red' }}
+          >
+            Συμφωνώ, διαγραφή λογαριασμού
+          </Button>
+        </DialogActions>
+      </Dialog>
     </SettingsLayout>
   );
 };
