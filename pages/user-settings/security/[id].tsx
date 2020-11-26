@@ -129,7 +129,10 @@ const UserSecurity: React.FC<Props> = () => {
               </Grid>
               {isSubmitting && <LinearProgress />}
               <br />
-
+              <p style={{ color: 'grey', fontSize: '13px' }}>
+                Βεβαιωθείτε ότι ο κωδικός αποτελείται από τουλάχιστον 7
+                χαρακτήρες και περιέχεται τουλάχιστον ένας αριθμός.
+              </p>
               <Box mt={2}>
                 <Button
                   type='submit'

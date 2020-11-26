@@ -76,7 +76,12 @@ export const InputField: React.FC<InputFieldProps | any> = ({
             .replace(
               'Passwords are not matching:Password are not matching',
               'Οι κωδικοί δεν ταιριάζουν!'
-            )}
+            )
+            .replace(
+              'confirmPassword:Password not matched',
+              'Οι κωδικοί δεν ταιριάζουν'
+            )
+            .replace('Password not matched', 'Οι κωδικοί δεν ταιριάζουν')}
         </FormHelperText>
       ) : (
         ''
