@@ -22,6 +22,7 @@ import Button from '@material-ui/core/Button';
 import Link from 'next/link';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fab from '@material-ui/core/Fab';
+import { validateConfirmPassword } from './utils/confirmPassword';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,17 +83,14 @@ const Register: React.FC = () => {
                   username: '',
                   email: '',
                   password: '',
-                  // confirmPassword: '',
+                  confirmPassword: '',
                 }}
                 validationSchema={Yup.object().shape({
                   password: Yup.string().min(
                     6,
                     'Ο κωδικός πρέπει να περιέχει τουλάχιστον 6 χαρακτήρες!'
                   ),
-
-                  // confirmPassword: Yup.string()
-                  //   .oneOf([Yup.ref('password'), null], 'Passwords must match')
-                  //   .required('Confirm Password is required'),
+                  confirmPassword: Yup.string().required(),
                 })}
                 onSubmit={async (values, { setSubmitting, setErrors }) => {
                   setTimeout(() => {
@@ -127,7 +125,13 @@ const Register: React.FC = () => {
                     }
                   }
                 }}
-                render={({ errors, touched, isSubmitting, submitForm }) => (
+                render={({
+                  errors,
+                  touched,
+                  isSubmitting,
+                  submitForm,
+                  values,
+                }) => (
                   <Form className={classes.form} noValidate>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
@@ -185,11 +189,10 @@ const Register: React.FC = () => {
                           className='invalid-feedback'
                         /> */}
                       </Grid>
-
-                      {/* <Grid item xs={12}>
+                      <Grid item xs={12}>
                         <Field
-                          label='Κωδικός'
-                          name='password'
+                          label='Επιβεβαίωση κωδικού'
+                          name='confirmPassword'
                           type='password'
                           component={InputField}
                           className={
@@ -198,13 +201,14 @@ const Register: React.FC = () => {
                               ? ' is-invalid'
                               : '')
                           }
+                          validate={(value: string) =>
+                            validateConfirmPassword(
+                              values.confirmPassword,
+                              value
+                            )
+                          }
                         />
-                        <ErrorMessage
-                          name='confirmPassword'
-                          component='div'
-                          className='invalid-feedback'
-                        />
-                      </Grid> */}
+                      </Grid>
                     </Grid>
                     {isSubmitting && <LinearProgress />}
                     <br />
@@ -236,7 +240,9 @@ const Register: React.FC = () => {
                         </Link>
                       </Grid>
                     </Grid>
-                    <Button type='reset'>ΕΠΑΝΑΦΟΡΑ</Button>
+                    <Button type='reset' style={{ marginTop: '3.5vh' }}>
+                      ΕΠΑΝΑΦΟΡΑ
+                    </Button>
                   </Form>
                 )}
               />

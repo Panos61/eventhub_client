@@ -60,10 +60,23 @@ export const InputField: React.FC<InputFieldProps | any> = ({
             .replace('Invalid Error', 'Λάθος μορφή email!')
             .replace(
               'Email or Username already taken.',
-              'Το email ή ο κωδικός χρησιμοποιούνται ήδη!'
+              'Το email ή το username χρησιμοποιούνται ήδη!'
             )
             .replace('password:', '')
-            .replace(',"password":"Υποχρεωτικό πεδίο!"', '')}
+            .replace(',"password":"Υποχρεωτικό πεδίο!"', '')
+            .replace(
+              'oldPassword:Υποχρεωτικό πεδίο!,"newPassword":"Υποχρεωτικό πεδίο"',
+              ''
+            )
+            .replace('newPassword:Υποχρεωτικό πεδίο', '')
+            .replace(
+              'confirmPassword:confirmPassword is a required field',
+              'Υποχρεωτικό πεδίο'
+            )
+            .replace(
+              'Passwords are not matching:Password are not matching',
+              'Οι κωδικοί δεν ταιριάζουν!'
+            )}
         </FormHelperText>
       ) : (
         ''
