@@ -8,6 +8,7 @@ import {
   useDeleteAccountMutation,
   useChangePasswordMutation,
   useMeQuery,
+  useDeleteUserEventsMutation,
 } from '../../../src/generated/graphql';
 import { useRouter } from 'next/router';
 import { Box, Container, Divider, makeStyles } from '@material-ui/core';
@@ -66,6 +67,7 @@ const UserSecurity: React.FC<Props> = () => {
   const [deleteAccount, { client, error }] = useDeleteAccountMutation();
   const { data } = useMeQuery();
   const [changePassword] = useChangePasswordMutation();
+  const [deleteUserEvents] = useDeleteUserEventsMutation();
   return (
     <SettingsLayout>
       <h2 style={{ textDecoration: 'underline' }}>Ασφάλεια λογαριασμού</h2>
@@ -229,9 +231,17 @@ const UserSecurity: React.FC<Props> = () => {
           </Button>
           <Button
             onClick={async () => {
-              await deleteAccount({
-                variables: { id: data?.me?.id } as any,
-              });
+              try {
+                await deleteUserEvents({
+                  variables: { creatorId: data?.me?.id } as any,
+                });
+                await deleteAccount({
+                  variables: { id: data?.me?.id } as any,
+                });
+              } catch (error) {
+                console.log(error);
+                return false;
+              }
 
               setAccessToken('');
               await client.resetStore();

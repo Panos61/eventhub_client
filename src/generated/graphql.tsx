@@ -55,7 +55,6 @@ export type Event = {
   description: Scalars['String'];
   date: Scalars['String'];
   time: Scalars['String'];
-  city: Scalars['String'];
   address: Scalars['String'];
   adultsOnly: Scalars['Boolean'];
   extraInfo: Scalars['String'];
@@ -73,6 +72,7 @@ export type Mutation = {
   deleteAccount: Scalars['Boolean'];
   changePassword: UserResponse;
   createEvent: EventResponse;
+  deleteUserEvents: Scalars['Boolean'];
 };
 
 
@@ -102,6 +102,11 @@ export type MutationCreateEventArgs = {
   options: EventInput;
 };
 
+
+export type MutationDeleteUserEventsArgs = {
+  creatorId: Scalars['Int'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -119,6 +124,7 @@ export type RegisterInput = {
   email: Scalars['String'];
   username: Scalars['String'];
   password: Scalars['String'];
+  confirmPassword: Scalars['String'];
 };
 
 export type EventResponse = {
@@ -140,7 +146,6 @@ export type EventInput = {
   adultsOnly: Scalars['Boolean'];
   time: Scalars['String'];
   date: Scalars['String'];
-  city: Scalars['String'];
   address: Scalars['String'];
   extraInfo: Scalars['String'];
 };
@@ -192,6 +197,16 @@ export type DeleteAccountMutationVariables = Exact<{
 export type DeleteAccountMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteAccount'>
+);
+
+export type DeleteUserEventsMutationVariables = Exact<{
+  creatorId: Scalars['Int'];
+}>;
+
+
+export type DeleteUserEventsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteUserEvents'>
 );
 
 export type LoginMutationVariables = Exact<{
@@ -419,6 +434,36 @@ export function useDeleteAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteAccountMutationHookResult = ReturnType<typeof useDeleteAccountMutation>;
 export type DeleteAccountMutationResult = Apollo.MutationResult<DeleteAccountMutation>;
 export type DeleteAccountMutationOptions = Apollo.BaseMutationOptions<DeleteAccountMutation, DeleteAccountMutationVariables>;
+export const DeleteUserEventsDocument = gql`
+    mutation deleteUserEvents($creatorId: Int!) {
+  deleteUserEvents(creatorId: $creatorId)
+}
+    `;
+export type DeleteUserEventsMutationFn = Apollo.MutationFunction<DeleteUserEventsMutation, DeleteUserEventsMutationVariables>;
+
+/**
+ * __useDeleteUserEventsMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserEventsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserEventsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserEventsMutation, { data, loading, error }] = useDeleteUserEventsMutation({
+ *   variables: {
+ *      creatorId: // value for 'creatorId'
+ *   },
+ * });
+ */
+export function useDeleteUserEventsMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserEventsMutation, DeleteUserEventsMutationVariables>) {
+        return Apollo.useMutation<DeleteUserEventsMutation, DeleteUserEventsMutationVariables>(DeleteUserEventsDocument, baseOptions);
+      }
+export type DeleteUserEventsMutationHookResult = ReturnType<typeof useDeleteUserEventsMutation>;
+export type DeleteUserEventsMutationResult = Apollo.MutationResult<DeleteUserEventsMutation>;
+export type DeleteUserEventsMutationOptions = Apollo.BaseMutationOptions<DeleteUserEventsMutation, DeleteUserEventsMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
